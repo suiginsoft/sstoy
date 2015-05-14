@@ -277,7 +277,7 @@ bool process_events(void)
 	KeySym key;
 	bool done = false;
 
-	while (XPending(x_display)) {
+	while (XPending(x_display) > 0) {
 		XNextEvent(x_display, &ev);
 		switch (ev.type) {
 		case ConfigureNotify:
