@@ -8,7 +8,6 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "config.h"
 
