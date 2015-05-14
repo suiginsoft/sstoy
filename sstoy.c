@@ -297,17 +297,15 @@ bool process_events(void)
 }
 
 static
-void render(float abstime)
+void render(double abstime)
 {
 	static const GLfloat vertices[] = {
-		-1.0f, -1.0f,
-		 1.0f, -1.0f,
-		-1.0f,  1.0f,
-		 1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,  1.0f,
 	};
 
 	if (uniform_gtime >= 0)
-		glUniform1f(uniform_gtime, abstime);
+		glUniform1f(uniform_gtime, (float)abstime);
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnableVertexAttribArray(attrib_position);
@@ -326,7 +324,7 @@ int main(int argc, char **argv)
 	for (;;) {
 		if (!process_events())
 			break;
-		render((float)timespec_diff(&start, &cur));
+		render(timespec_diff(&start, &cur));
 		monotonic_time(&cur);
 	}
 
