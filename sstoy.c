@@ -39,7 +39,6 @@ static const char fragment_shader_footer[] =
 static Display *x_display;
 static Window x_root;
 static Window x_window;
-static XComposeStatus x_kstatus;
 static EGLDisplay egl_display;
 static EGLContext egl_context;
 static EGLSurface egl_surface;
@@ -122,7 +121,7 @@ GLuint compile_shader(GLenum type, GLsizei nsources, const char **sources)
 }
 
 static
-void resize_viewport(GLsizei w, GLsizei h)
+void resize(GLsizei w, GLsizei h)
 {
 	if (viewport_width != w || viewport_height != h) {
 		glUniform3f(uniform_res, (float)w, (float)h, 0.0f);
@@ -257,7 +256,7 @@ void startup(void)
 	if (!XGetWindowAttributes(x_display, x_window, &gwa))
 		die("Unable to get window size.\n");
 
-	resize_viewport(gwa.width, gwa.height);
+	resize(gwa.width, gwa.height);
 }
 
 static
@@ -272,37 +271,26 @@ void shutdown(void)
 }
 
 static
-bool process_event(XEvent *ev)
-{
-	char kbuf[32];
-	KeySym key;
-
-	switch (ev->type) {
-	case ConfigureNotify:
-		resize_viewport(ev->xconfigure.width, ev->xconfigure.height);
-		break;
-	case KeyPress:
-		XLookupString(&ev->xkey, kbuf, sizeof(kbuf), &key, &x_kstatus);
-		if (key == XK_Escape || key == XK_q)
-			return false;
-		break;
-	default:
-		break;
-	}
-
-	return true;
-}
-
-static
 bool process_events(void)
 {
-	bool done = false;
 	XEvent ev;
+	KeySym key;
+	bool done = false;
 
 	while (XPending(x_display)) {
 		XNextEvent(x_display, &ev);
-		if (!process_event(&ev))
-			done = true;
+		switch (ev.type) {
+		case ConfigureNotify:
+			resize(ev.xconfigure.width, ev.xconfigure.height);
+			break;
+		case KeyPress:
+			key = XLookupKeysym(&ev.xkey, 0);
+			if (key == XK_Escape || key == XK_q)
+				done = true;
+			break;
+		default:
+			break;
+		}
 	}
 
 	return !done;
