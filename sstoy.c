@@ -47,12 +47,10 @@ static GLuint shader_program;
 static GLint attrib_position;
 static GLint sampler_channel[4];
 static GLint uniform_cres;
-static GLint uniform_ctime;
 static GLint uniform_date;
 static GLint uniform_gtime;
 static GLint uniform_mouse;
 static GLint uniform_res;
-static GLint uniform_srate;
 
 static
 void die(const char *format, ...)
@@ -245,12 +243,10 @@ void startup(void)
 	sampler_channel[2] = glGetUniformLocation(shader_program, "iChannel2");
 	sampler_channel[3] = glGetUniformLocation(shader_program, "iChannel3");
 	uniform_cres = glGetUniformLocation(shader_program, "iChannelResolution");
-	uniform_ctime = glGetUniformLocation(shader_program, "iChannelTime");
 	uniform_date = glGetUniformLocation(shader_program, "iDate");
 	uniform_gtime = glGetUniformLocation(shader_program, "iGlobalTime");
 	uniform_mouse = glGetUniformLocation(shader_program, "iMouse");
 	uniform_res = glGetUniformLocation(shader_program, "iResolution");
-	uniform_srate = glGetUniformLocation(shader_program, "iSampleRate");
 
 	if (!XGetWindowAttributes(x_display, x_window, &gwa))
 		die("Unable to get window size.\n");
