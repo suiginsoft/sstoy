@@ -11,6 +11,8 @@ static const EGLint egl_config[] = {
 	EGL_NONE
 };
 
+static const unsigned int framerate = 60;
+
 /*
  * Star Nest by Pablo Román Andrioli
  * https://www.shadertoy.com/view/XlfGRj
