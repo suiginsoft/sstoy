@@ -311,7 +311,8 @@ void render(double abstime)
 
 int main(int argc, char **argv)
 {
-	struct timespec start, cur;
+	struct timespec start, cur, mfr;
+	mfr = (struct timespec){ .tv_sec = 0, .tv_nsec = 1000000000 / framerate };
 
 	startup();
 	monotonic_time(&start);
@@ -321,6 +322,7 @@ int main(int argc, char **argv)
 			break;
 		render(timespec_diff(&start, &cur));
 		monotonic_time(&cur);
+		nanosleep(&mfr, NULL);
 	}
 
 	shutdown();
