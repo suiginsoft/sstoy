@@ -129,7 +129,7 @@ void resize(GLsizei w, GLsizei h)
 }
 
 static
-void startup(void)
+void startup(const char *user_fragment_shader)
 {
 	static const EGLint cv[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -206,7 +206,7 @@ void startup(void)
 
 	sources[0] = common_shader_header;
 	sources[1] = fragment_shader_header;
-	sources[2] = default_fragment_shader;
+	sources[2] = user_fragment_shader;
 	sources[3] = fragment_shader_footer;
 	frag = compile_shader(GL_FRAGMENT_SHADER, 4, sources);
 
@@ -312,8 +312,18 @@ void render(double abstime)
 int main(int argc, char **argv)
 {
 	struct timespec start, cur;
+	char *ufs;
+	size_t bytes_read;
 
-	startup();
+	if (!(ufs = calloc(input_bufsize, 1)))
+		die("Unable to allocate for shader source input.\n");
+	bytes_read = fread(ufs, 1, input_bufsize, stdin);
+	if (feof(stdin) && (bytes_read == 0))
+		ufs = default_fragment_shader;
+	if (ferror(stdin))
+		die("Error reading standard input.\n");
+
+	startup(ufs);
 	monotonic_time(&start);
 
 	for (;;) {

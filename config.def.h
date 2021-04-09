@@ -11,6 +11,8 @@ static const EGLint egl_config[] = {
 	EGL_NONE
 };
 
+static const size_t input_bufsize = 262144;
+
 /*
  * Star Nest by Pablo Román Andrioli
  * https://www.shadertoy.com/view/XlfGRj
